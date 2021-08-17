@@ -1892,7 +1892,7 @@ int simulate_by_model()
       sprintf(id, "%s%ld_%ld", sim.id_prefix, ref.num, sim.res_num);
       fprintf(fp_fq, "@%s\n%s\n+%s\n%s\n", id, mut.new_seq, id, mut.new_qc);
     }
-    records.push_back({.ref = mut.seq, .seq = mut.new_seq, .qc = mut.new_qc});
+    records.push_back({.ref = mut.maf_ref_seq, .seq = mut.new_seq, .qc = mut.new_qc});
     if (0) //no maf file output
     {
       digit_num1[0] = 3;
@@ -2566,6 +2566,7 @@ void save_data()
   FILE *fp = fopen(output_file, "w");
   for (auto &record : records)
   {
+    record.ref.erase(std::remove(record.ref.begin(), record.ref.end(), '-'), record.ref.end());
     transform(record.ref);
     transform(record.seq);
     fprintf(fp, "%s\t%s\t%s\n", record.ref.c_str(), record.seq.c_str(), record.qc.c_str());
